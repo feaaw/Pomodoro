@@ -10,12 +10,16 @@ const timeEl = document.getElementById("time");
 const modeEl = document.getElementById("mode");
 
 function update() {
-    const remain = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
-    const min =  String(Math.floor(remain / 60)).padStart(2, "0");
-    const sec = String(remain % 60).padStart(2, "0");
-    timeEl.textContent = `${min}:${sec}`;
+  const diff = endTime - Date.now();
+  const remain = Math.max(0, Math.ceil(diff / 1000));
 
-    if (remain <= 0) finish();
+  const min = String(Math.floor(remain / 60)).padStart(2, "0");
+  const sec = String(remain % 60).padStart(2, "0");
+  timeEl.textContent = `${min}:${sec}`;
+
+  if (remain === 0) {
+    finish();
+  }
 }
 
 function start() {
@@ -25,6 +29,7 @@ function start() {
     localStorage.setItem("endTime", endTime);
     localStorage.setItem("mode", mode);
 
+    update();
     timer = setInterval(update, 1000);
 }
 
