@@ -1,9 +1,9 @@
 :root {
-    --bg: #0f0f0f;
-    --card: #1c1c1e;
-    --primary: #ff3b30;
-    --text: #ffffff;
-    --sub: #a1a1a6;
+    --bg: hsl(270, 100%, 99%);
+    --card: #ffffff;
+    --primary: hsl(270, 60%, 60%);
+    --text: hsl(270, 55%, 65%);
+    --sub: hsl(270, 35%, 35%);
 }
 
 * {
@@ -54,29 +54,32 @@ body {
 }
 
 .controls {
-    display: flez;
-    gap: 12px;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 20px 32px;
+    margin-bottom: 16px;
 }
 
 button {
-    flex: 1;
     padding: 16px;
     font-size: 1rem;
-    border-radius: 14px;
+    border-radius: 16px;
     border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 button.primary {
     background: var(--primary);
-    color: white;
+    color: #fff;
 }
 
 button.secondary {
     background: var(--card);
-    color: white;
+    color: var(--text);
 }
 
 button:active {
-    opacity: 0.8;
+    transform: scale(0.98);
+    opacity: 0.9;
 }
