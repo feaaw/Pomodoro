@@ -4,70 +4,97 @@ const BREAK = 5 * 60;
 let mode = "work";
 let duration = WORK;
 let endTime = null;
+let remaining = null;
 let timer = null;
+let paused = false;
 
 const timeEl = document.getElementById("time");
 const modeEl = document.getElementById("mode");
+const startBtn = document.getElementById("start")
+const resetBtn = document.getElementById("reset")
+
+function updateDisplay(seconds) {
+    const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const sec = String(seconds % 60).padStart(2, "0");
+    timeEl.textContent = `${min}:${sec}`;
+}
 
 function update() {
-  const diff = endTime - Date.now();
-  const remain = Math.max(0, Math.ceil(diff / 1000));
+  const remain = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+  updateDisplay(remain);
 
-  const min = String(Math.floor(remain / 60)).padStart(2, "0");
-  const sec = String(remain % 60).padStart(2, "0");
-  timeEl.textContent = `${min}:${sec}`;
-
-  if (remain === 0) {
-    finish();
-  }
+  if (remain === 0) finish();
 }
 
 function start() {
     if (timer) return;
 
-    endTime = Date.now() + duration * 1000;
-    localStorage.setItem("endTime", endTime);
-    localStorage.setItem("mode", mode);
+    if (paused && remaining !== null) {
+        endTime = Date.now() + remaining * 1000;
+    } else {
+        remaining = duration;
+        endTime = Date.now() + duration * 1000;
+    }
+
+    paused = false;
+    startBtn.textContent = "一時停止";
 
     update();
     timer = setInterval(update, 1000);
 }
 
+function pause() {
+    if (!timer) return;
+
+    clearInterval(timer);
+    timer = null;
+
+    remaining = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+    paused = true;
+    startBtn.textContent = "再開";
+}
+
+startBtn.onclick = () => {
+    if (timer) {
+        pause();
+    } else {
+        start();
+    }
+};
+
 function finish() {
     clearInterval(timer);
     timer = null;
 
-    notify();
+    alert("終了");
 
-    if (mode === "work") {
-        mode = "break";
-        duration = BREAK;
-        modeEl.textContent = "休憩";
-    } else {
-        mode = "work";
-        duration = WORK;
-        modeEl.textContent = "作業";
-    }
+    mode = mode === "work" ? "break" : "work";
+    duration = mode === "work" ? WORK : BREAK;
+    modeEl.textContent = mode === "work" ? "作業" : "休憩";
 
+    paused = false;
+    remaining = null;
     start();
 }
 
-function notify() {
-    if (Notification.permission === "granted") {
-        new Notification("ポモドーロ終了");
-    }
+function reset() {
+    clearInterval(timer);
+    timer = null;
+
+    mode = "work";
+    duration = WORK;
+    remaining = null;
+    paused = false;
+
+    startBtn.textContent = "スタート";
+    modeEl.textContent = "作業";
+    updateDisplay(WORK);
+
+    localStorage.clear();
 }
 
-document.getElementById("start").onclick = start;
-document.getElementById("reset").onclick = reset;
+resetBtn.onclick = reset;
 
-// 復元
-const saveEnd = localStorage.getItem("endTime");
-if (saveEnd) {
-    endTime = Number(savedEnd);
-    mode = localStorage.getItem("mode");
-    duration = Math.floor((endTime - Date.now()) / 1000);
-    timer = setInterval(update, 1000);
-}
+updateDisplay(WORK);
 
 Notification.requestPermission();
