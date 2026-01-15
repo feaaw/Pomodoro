@@ -9,22 +9,22 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1> Pomodoro</h1>
+        <div class="app">
+            <header class="header">
+                <h1> Pomodoro</h1>
+                <div id="mode">作業</div>
+             </header>
 
-        <div id="mode">作業</div>
-        <div id="time">25:00</div>
+            <main class="timer">
+                <div id="time">25:00</div>
+            </main>
 
-        <div class="buttons">
-            <button id="start">スタート</button>
-            <button id="reset">リセット</button>
+            <footer class="controls">
+                <button id="start" class="primart">スタート</button>
+                <button id="reset" class="secondary">リセット</button>
+            </footer>
         </div>
 
         <script src="script.js"></script>
-
-        <script>
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js');
-            }
-        </script> 
     </body>
 </html>
