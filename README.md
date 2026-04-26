@@ -2,7 +2,7 @@
  
 > ポモドーロ・テクニックに基づいたシンプルなタイマーアプリ。PWA対応でスマートフォンにインストールして使える。
  
-🔗 **[デモを見る](https://feaaw.github.io/Pomodoro)** 
+🔗 **[デモを見る](https://feaaw.github.io/Pomodoro/)** 
  
 ---
  
